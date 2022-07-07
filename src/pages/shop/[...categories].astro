@@ -1,0 +1,35 @@
+---
+import { Prisma } from '@prisma/client'
+
+import Item from 'components/Item.astro'
+
+import Shop from 'layouts/Shop.astro'
+
+import { ItemWithImages, prisma } from 'lib/prisma'
+
+export interface Params {
+  categories?: string
+}
+
+const { categories } = Astro.params as Params
+
+const where: Prisma.ItemWhereInput | undefined = categories
+  ? { category: { path: { startsWith: categories } } }
+  : undefined
+const items: ItemWithImages[] = await prisma.item.findMany({
+  where,
+  include: { images: true },
+})
+---
+
+<Shop categories={categories}>
+  {items.length > 0 ? (
+    <div class="grid gap-4 grid-cols-4">
+      {items.map((item) => (
+        <Item item={item} />
+      ))}
+    </div>
+  ) : (
+    <p class="text-lg">No Items</p>
+  )}
+</Shop>

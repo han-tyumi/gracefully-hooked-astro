@@ -1,0 +1,29 @@
+---
+import { CountStorageKey } from 'lib/snipcart'
+---
+
+<div id={CountStorageKey}>
+  <slot></slot>
+</div>
+
+<script>
+  import { CountStorageKey } from 'lib/snipcart'
+
+  const element = document.querySelector(`#${CountStorageKey}`)!
+  const setCount = (count: string) => {
+    element.innerHTML = count
+  }
+
+  const storedCount = localStorage.getItem(CountStorageKey)
+  if (storedCount != null) {
+    setCount(storedCount)
+  }
+
+  document.addEventListener('snipcart.ready', () => {
+    window.Snipcart.store.subscribe(() => {
+      const newCount = String(window.Snipcart.store.getState().cart.items.count)
+      localStorage.setItem(CountStorageKey, newCount)
+      setCount(newCount)
+    })
+  })
+</script>

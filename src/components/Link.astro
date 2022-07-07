@@ -1,0 +1,23 @@
+---
+export interface Props extends astroHTML.JSX.HTMLProps<HTMLAnchorElement> {
+  activeClass?: string
+  exact?: boolean
+  href?: string
+}
+
+const {
+  activeClass = '',
+  exact,
+  href,
+  class: className,
+  ...rest
+} = Astro.props as Props
+
+const url = new URL(Astro.request.url)
+const pathname = decodeURI(url.pathname)
+const active = href && (exact ? pathname === href : pathname.startsWith(href))
+---
+
+<a href={href} class:list={[className, { [activeClass]: active }]} {...rest}>
+  <slot></slot>
+</a>

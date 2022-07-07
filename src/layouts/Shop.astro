@@ -1,0 +1,25 @@
+---
+import SideBar from 'components/SideBar/SideBar.astro'
+
+import Default from 'layouts/Default.astro'
+
+export interface Props {
+  categories?: string
+}
+
+const { categories } = Astro.props as Props
+
+const categoryPath = categories?.split('/') ?? []
+const activeCategory = categoryPath.at(0)
+const title = categories ? categoryPath.join(' / ') : 'Shop All'
+---
+
+<Default title={title}>
+  <div class='flex space-x-14 py-8 px-10'>
+    <SideBar class='mt-3' activeCategory={activeCategory} />
+    <div class='flex flex-col space-y-14 w-full'>
+      <h1 class='font-semibold text-4xl capitalize'>{title}</h1>
+      <slot></slot>
+    </div>
+  </div>
+</Default>

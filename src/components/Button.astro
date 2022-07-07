@@ -1,0 +1,20 @@
+---
+export interface Props {
+  class?: string
+  disabled?: boolean
+  onclick?: astroHTML.JSX.MouseEventHandler<HTMLButtonElement>
+}
+
+const { class: className = '', disabled, onclick } = Astro.props as Props
+---
+
+<button
+  class={`${className} rounded-full font-semibold py-3 px-8 ${
+    disabled
+      ? 'bg-gray cursor-default'
+      : 'bg-turquoise cursor-pointer hover:bg-turquoise-dark'
+  }`}
+  onclick={onclick}
+>
+  <slot></slot>
+</button>

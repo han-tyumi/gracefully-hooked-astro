@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Category {
+  id            Int        @id @default(autoincrement())
+  name          String
+  parentId      Int?       @map("parent_id")
+  path          String     @unique
+  category      Category?  @relation("categoryTocategory_parent_id", fields: [parentId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  subcategories Category[] @relation("categoryTocategory_parent_id")
+  item          Item[]
+
+  @@map("category")
+}
+
+model Image {
+  id       Int    @id @default(autoincrement())
+  filename String @unique
+  itemId   Int?   @map("item_id")
+  item     Item?  @relation(fields: [itemId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@map("image")
+}
+
+model Item {
+  id          Int       @id @default(autoincrement())
+  slug        String    @unique
+  name        String
+  description String?
+  categoryId  Int?      @map("category_id")
+  price       Float
+  createdAt   DateTime? @default(now()) @map("created_at") @db.Timestamptz(6)
+  category    Category? @relation(fields: [categoryId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  images      Image[]
+
+  @@map("item")
+}

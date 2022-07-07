@@ -1,0 +1,43 @@
+---
+import Link from 'components/Link.astro'
+
+export interface Props {
+  category: string
+  subcategories: string[]
+  expanded?: boolean
+}
+
+const { category, subcategories, expanded } = Astro.props as Props
+const hasChildren = subcategories.length > 0
+---
+
+<ul class='text-blue-dark'>
+  <Link
+    class='group'
+    activeClass='text-blue-darker font-semibold'
+    href={`/shop/${category}`}
+  >
+    <div
+      class:list={[
+        'i-fa6-solid:caret-right inline-block mr-2 transition-transform ease-out duration-300',
+        { 'text-transparent': !hasChildren, 'rotate-90': expanded },
+      ]}
+    >
+    </div>
+    <span class='group-hover:text-blue group-hover:underline'>
+      {category}
+    </span>
+  </Link>
+
+  {expanded &&
+    subcategories.map((subcategory) => (
+      <li class="ml-8 w-max hover:text-blue hover:underline">
+        <Link
+          activeClass="text-blue-darker font-semibold"
+          href={`/shop/${category}/${subcategory}`}
+        >
+          {subcategory}
+        </Link>
+      </li>
+    ))}
+</ul>

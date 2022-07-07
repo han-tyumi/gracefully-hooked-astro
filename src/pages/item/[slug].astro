@@ -1,0 +1,36 @@
+---
+import Details from 'components/Details.astro'
+import ImageViewer from 'components/ImageViewer'
+
+import Default from 'layouts/Default.astro'
+
+import { ItemWithImages, prisma } from 'lib/prisma'
+
+export interface Params {
+  slug?: string
+}
+
+const { slug } = Astro.params as Params
+
+const item: ItemWithImages | null = await prisma.item.findFirst({
+  where: { slug },
+  include: { images: true },
+})
+---
+
+<Default title={item?.name ?? ''}>
+  <div class='py-12 px-8'>
+    {item ? (
+      <div class="flex space-x-12 w-full">
+        <ImageViewer
+          client:load
+          class="w-7/12"
+          images={item.images.map(({ filename }) => `/img/item/${filename}`)}
+        />
+        <Details class="w-5/12" item={item} />
+      </div>
+    ) : (
+      <h2 class="flex text-lg w-full justify-center">Loading...</h2>
+    )}
+  </div>
+</Default>

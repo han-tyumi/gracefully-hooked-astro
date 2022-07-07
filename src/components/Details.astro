@@ -1,0 +1,55 @@
+---
+import { ItemWithImages } from 'lib/prisma'
+import { ProductFactory } from 'lib/snipcart'
+
+import Button from 'components/Button.astro'
+import Product from 'components/Snipcart/Product.astro'
+
+export interface Props {
+  class?: string
+  item: ItemWithImages
+}
+
+const { class: className = '', item } = Astro.props as Props
+
+const filename = item.images.at(0)?.filename
+const image = filename && `/img/item/${filename}`
+const url = `/item/${item.slug}`
+
+const product = ProductFactory.New({
+  id: item.slug,
+  name: item.name,
+  price: item.price,
+  description: item.description,
+  image,
+  minQuantity: 0,
+  maxQuantity: 1,
+  url,
+})
+---
+
+<div class={`flex flex-col space-y-10 ${className}`}>
+  <div class='flex flex-col'>
+    <h1 class='font-semibold text-3xl'>{item.name}</h1>
+    <h3 class='text-2xl'>${item.price}</h3>
+  </div>
+
+  <div class='flex flex-col'>
+    <label class='font-semibold'>Description</label>
+    <p class='whitespace-pre-wrap'>{item.description}</p>
+  </div>
+
+  <!-- <div class="flex flex-col">
+    <label class="font-semibold">Size</label>
+    <p class="whitespace-pre-wrap">{ item.size }</p>
+  </div> -->
+
+  <!-- <div class="flex flex-col">
+    <label class="font-semibold">Materials</label>
+    <p>{ materials }</p>
+  </div> -->
+
+  <Product product={product}>
+    <Button class='max-w-max'>Add to Bag</Button>
+  </Product>
+</div>

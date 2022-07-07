@@ -1,0 +1,39 @@
+---
+import Link from 'components/Link.astro'
+import SideBarItem from 'components/SideBar/SideBarItem.astro'
+
+import { prisma } from 'lib/prisma'
+
+export interface Props {
+  class?: string
+  activeCategory?: string
+}
+
+const { class: className = '', activeCategory } = Astro.props as Props
+
+const categories = await prisma.category.findMany({
+  where: { parentId: null },
+  select: { name: true, subcategories: { select: { name: true } } },
+})
+---
+
+<div class={`${className} space-y-4`}>
+  <Link
+    class='text-blue-dark hover:text-blue hover:underline'
+    activeClass='text-blue-darker font-semibold'
+    href='/shop'
+    exact
+  >
+    Shop All
+  </Link>
+
+  <ul class='space-y-2 w-52 capitalize'>
+    {categories.map(({ name, subcategories }) => (
+      <SideBarItem
+        category={name}
+        subcategories={subcategories.map(({ name }) => name)}
+        expanded={activeCategory === name}
+      />
+    ))}
+  </ul>
+</div>

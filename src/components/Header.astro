@@ -1,0 +1,33 @@
+---
+import Link from 'components/Link.astro'
+import CartCount from 'components/Snipcart/CartCount.astro'
+import Checkout from 'components/Snipcart/Checkout.astro'
+---
+
+<div
+  class='bg-blue-light flex text-white py-7 px-8 items-center justify-between'
+>
+  <a href='/'>
+    <h1 class='font-logo text-3xl -mt-4'>Gracefully Hooked</h1>
+  </a>
+
+  <div class='flex space-x-6 items-center'>
+    <div class='flex items-center'>
+      <div class='i-fa6-solid-magnifying-glass'></div>
+      <input class='rounded text-black px-2 mx-2' />
+
+      <div class='ml-6'>
+        <Checkout>
+          <Link class='relative cursor-pointer'>
+            <div class='i-fa6-solid-bag-shopping text-lg'></div>
+            <span
+              class='bg-blue-darker rounded-full font-semibold text-center text-white text-xs -right-4 -bottom-2 w-6 absolute'
+            >
+              <CartCount />
+            </span>
+          </Link>
+        </Checkout>
+      </div>
+    </div>
+  </div>
+</div>

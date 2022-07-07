@@ -1,0 +1,13 @@
+---
+import { ProductFactory } from 'lib/snipcart'
+
+export interface Props {
+  product: ProductFactory
+}
+
+const { product } = Astro.props as Props
+---
+
+<div class='snipcart-add-item' {...product.getAttributes()}>
+  <slot></slot>
+</div>
